@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
+from database import engine, Base, get_db
 import models
 
 from routers import auth, users, datasets, chat, ai, documents, whatsapp
@@ -41,6 +41,14 @@ app.add_middleware(
 @app.get("/health", tags=["Health"])
 def health():
     return {"status": "running"}
+
+
+@app.get("/debug-clients", tags=["Health"])
+def debug_clients(db = Depends(get_db)):
+    from models import Client
+    clients = db.query(Client).all()
+    return [{"id": str(c.id), "business_name": c.business_name, "whatsapp_number": c.whatsapp_number, "is_active": c.is_active} for c in clients]
+
 
 
 app.include_router(auth.router,     prefix="/auth",     tags=["Auth"])
