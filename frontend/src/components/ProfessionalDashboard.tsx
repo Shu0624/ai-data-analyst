@@ -367,7 +367,6 @@ export function ProfessionalDashboard({
             <GlowCard
               key={i}
               glowColor="rgba(212, 168, 83, 0.04)"
-              borderColor="rgba(212, 168, 83, 0.15)"
               className="p-5 flex items-center justify-between group cursor-default"
             >
               <div>
