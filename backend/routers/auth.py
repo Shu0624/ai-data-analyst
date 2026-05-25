@@ -767,3 +767,56 @@ def delete_account(
         )
 
     return {"message": "Account permanently deleted"}
+
+
+# ── POST /auth/dev-login (DEV ONLY) ──────────────────────────
+@router.post(
+    "/dev-login",
+    response_model=TokenResponse,
+    summary="[DEV ONLY] Auto-login without OTP — creates a dev user if needed",
+)
+def dev_login(db: Session = Depends(get_db)):
+    """
+    Creates a pre-verified dev user and returns tokens immediately.
+    No password, no OTP, no email required. For local development only.
+    """
+    dev_email = "dev@localhost.com"
+    dev_name  = "Dev User"
+    dev_pass  = "devpassword123"
+
+    user = get_user_by_email(db, dev_email)
+
+    if not user:
+        user = User(
+            name          = dev_name,
+            email         = dev_email,
+            password_hash = hash_password(dev_pass),
+            role          = "user",
+            is_verified   = True,
+        )
+        try:
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        except Exception:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create dev user",
+            )
+
+    token_data    = {"sub": str(user.id), "email": user.email, "role": user.role}
+    access_token  = create_access_token(token_data)
+    refresh_token = create_refresh_token_str(token_data)
+
+    try:
+        store_refresh_token(db, user.id, refresh_token)
+        db.commit()
+    except Exception:
+        db.rollback()
+
+    return {
+        "access_token":  access_token,
+        "refresh_token": refresh_token,
+        "token_type":    "bearer",
+    }

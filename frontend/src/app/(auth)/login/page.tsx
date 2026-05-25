@@ -8,11 +8,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from "lucide-react"
-import { loginUser } from "@/lib/auth"
+import { loginUser, devLoginUser } from "@/lib/auth"
 
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isDevLoading, setIsDevLoading] = useState(false)
   const [error, setError] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -29,6 +30,19 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : "Login failed")
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleDevLogin = async () => {
+    setError("")
+    setIsDevLoading(true)
+    try {
+      await devLoginUser()
+      router.push("/dashboard")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Dev login failed")
+    } finally {
+      setIsDevLoading(false)
     }
   }
 
@@ -54,18 +68,18 @@ export default function LoginPage() {
                 <label className="text-sm font-medium text-foreground/70 pl-1" htmlFor="email">Email Address</label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40 group-focus-within:text-brand-light transition-colors pointer-events-none" />
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="name@company.com" 
-                    className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light" 
-                    required 
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your gmail"
+                    className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center justify-between pl-1">
                   <label className="text-sm font-medium text-foreground/70" htmlFor="password">Password</label>
@@ -73,19 +87,19 @@ export default function LoginPage() {
                 </div>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-foreground/40 group-focus-within:text-brand-light transition-colors pointer-events-none" />
-                  <Input 
-                    id="password" 
-                    type="password" 
-                    placeholder="••••••••" 
-                    className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light" 
-                    required 
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light"
+                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
 
-              <Button type="submit" variant="brand" className="w-full h-14 text-lg mt-6 group" disabled={isLoading}>
+              <Button type="submit" variant="brand" className="w-full h-14 text-lg mt-6 group" disabled={isLoading || isDevLoading}>
                 {isLoading ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
@@ -93,6 +107,20 @@ export default function LoginPage() {
                     Sign In
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
+                )}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleDevLogin}
+                className="w-full h-14 text-lg mt-3 border-dashed border-brand/40 text-brand-light hover:bg-brand/10"
+                disabled={isLoading || isDevLoading}
+              >
+                {isDevLoading ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  "Quick Demo / Dev Login"
                 )}
               </Button>
             </form>

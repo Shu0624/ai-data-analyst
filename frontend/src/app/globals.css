@@ -1,3 +1,15 @@
+/*
+ * AI Data Analyst — Design System
+ * ================================
+ * Color Strategy: Warm gold (HSL ~43°) on obsidian dark (#06060A)
+ * Typography: Playfair Display (serif headings) + Inter (sans body)
+ * Spacing Scale: 4px base (4, 8, 12, 16, 24, 32, 48, 64, 96)
+ * Border Radius: 8px (sm), 12px (md), 16px (lg), 24px (xl), 48px (3xl)
+ * Elevation: Glass panels with backdrop-blur for z-axis depth
+ * Motion: 150-300ms transitions, cubic-bezier(0.16, 1, 0.3, 1) for entries
+ * Accessibility: WCAG AA contrast (7.2:1 on primary text), focus-visible rings
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,6 +54,25 @@
   /* Luxury Gold Text Gradient */
   .luxury-text-gradient {
     @apply bg-clip-text text-transparent bg-luxury-gradient bg-[length:200%_auto] animate-shimmer;
+  }
+
+  /* Custom thin scrollbar for panels */
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-brand/20 rounded-full hover:bg-brand/40 transition-colors; }
+  .scrollbar-thin::-webkit-scrollbar-track { @apply bg-transparent; }
+
+  /* Tech grid background pattern */
+  .tech-grid {
+    background-image: 
+      linear-gradient(rgba(212, 168, 83, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212, 168, 83, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Sidebar collapse transition */
+  .sidebar-transition {
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+                padding 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 

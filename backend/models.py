@@ -1,9 +1,43 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, Text, Boolean, Integer, Float, ForeignKey, TIMESTAMP
-from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
-from database import Base
+from database import Base, DATABASE_URL
+
+import os
+from sqlalchemy.dialects.postgresql import UUID as pgUUID, JSONB as pgJSONB
+
+# Conditionally map UUID and JSONB to support SQLite in local offline mode
+if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+    UUID = pgUUID
+    JSONB = pgJSONB
+else:
+    from sqlalchemy.types import TypeDecorator, String as SQLiteString
+    from sqlalchemy import JSON as SQLiteJSON
+    class SQLiteUUID(TypeDecorator):
+        impl = SQLiteString
+        cache_ok = True
+        
+        def __init__(self, length=36, *args, **kwargs):
+            kwargs.pop("as_uuid", None)
+            super().__init__(length, *args, **kwargs)
+
+        def process_bind_param(self, value, dialect):
+            if value is None:
+                return None
+            if isinstance(value, uuid.UUID):
+                return str(value)
+            return str(value)
+
+        def process_result_value(self, value, dialect):
+            if value is None:
+                return None
+            try:
+                return uuid.UUID(value)
+            except ValueError:
+                return value
+    UUID = SQLiteUUID
+    JSONB = SQLiteJSON
 
 
 def now():
@@ -246,3 +280,58 @@ class DocumentQuery(Base):
     created_at       = Column(TIMESTAMP, nullable=False, default=now)
 
     document = relationship("Document", back_populates="queries")
+
+
+# ── 15. Clients (WhatsApp Business Owners) ───────────────────
+class Client(Base):
+    __tablename__ = "clients"
+
+    id                = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id           = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    business_name     = Column(String(200), nullable=False)
+    niche             = Column(String(50),  nullable=False)   # gym | coaching | clinic | realestate | d2c | other
+    whatsapp_number   = Column(String(20),  nullable=False, unique=True)
+    document_id       = Column(UUID(as_uuid=True), ForeignKey("documents.id", ondelete="SET NULL"), nullable=True)
+    greeting_message  = Column(Text, nullable=True)           # Custom greeting when customer says "Hi"
+    qualification_flow = Column(JSONB, nullable=True)         # Chatbot flow config
+    is_active         = Column(Boolean, nullable=False, default=True)
+    created_at        = Column(TIMESTAMP, nullable=False, default=now)
+    updated_at        = Column(TIMESTAMP, nullable=False, default=now, onupdate=now)
+
+    user     = relationship("User")
+    document = relationship("Document")
+    leads    = relationship("Lead", back_populates="client", cascade="all, delete")
+
+
+# ── 16. Leads (Captured from WhatsApp) ───────────────────────
+class Lead(Base):
+    __tablename__ = "leads"
+
+    id              = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    client_id       = Column(UUID(as_uuid=True), ForeignKey("clients.id", ondelete="CASCADE"), nullable=False)
+    phone           = Column(String(20),  nullable=False)
+    name            = Column(String(100), nullable=True)
+    interest        = Column(String(100), nullable=True)
+    status          = Column(String(20),  nullable=False, default="new")  # new | contacted | qualified | converted | lost
+    source          = Column(String(50),  nullable=False, default="whatsapp")
+    lead_score      = Column(Integer, nullable=True)          # 0-100 AI-generated score
+    last_message_at = Column(TIMESTAMP, nullable=True)
+    created_at      = Column(TIMESTAMP, nullable=False, default=now)
+
+    client   = relationship("Client",      back_populates="leads")
+    messages = relationship("LeadMessage", back_populates="lead", cascade="all, delete")
+
+
+# ── 17. Lead Messages (WhatsApp Conversation Log) ────────────
+class LeadMessage(Base):
+    __tablename__ = "lead_messages"
+
+    id           = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    lead_id      = Column(UUID(as_uuid=True), ForeignKey("leads.id", ondelete="CASCADE"), nullable=False)
+    direction    = Column(String(10),  nullable=False)    # inbound | outbound
+    message_text = Column(Text,        nullable=False)
+    message_type = Column(String(20),  nullable=False, default="text")  # text | button_reply | image | template
+    wa_message_id = Column(String(100), nullable=True)    # WhatsApp message ID for tracking
+    created_at   = Column(TIMESTAMP,   nullable=False, default=now)
+
+    lead = relationship("Lead", back_populates="messages")

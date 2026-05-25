@@ -15,7 +15,7 @@ export function Navbar() {
   }, [])
 
   return (
-    <nav className="fixed top-0 w-full z-50 border-b border-surface-border bg-background/60 backdrop-blur-2xl">
+    <nav className="fixed top-0 w-full z-50 border-b border-surface-border bg-background/60 backdrop-blur-2xl" aria-label="Main navigation">
       <div className="container mx-auto px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-3 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-light to-brand-dark flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform duration-300">
@@ -26,8 +26,8 @@ export function Navbar() {
         <div className="hidden md:flex items-center space-x-8">
           <Link href="/" className="text-sm font-medium text-foreground/70 hover:text-brand-light transition-colors">Home</Link>
           <Link href="/dashboard" className="text-sm font-medium text-foreground/70 hover:text-brand-light transition-colors">Dashboard</Link>
+          <Link href="/#features" className="text-sm font-medium text-foreground/70 hover:text-brand-light transition-colors">Features</Link>
           <Link href="/#services" className="text-sm font-medium text-foreground/70 hover:text-brand-light transition-colors">Services</Link>
-          <Link href="/#about" className="text-sm font-medium text-foreground/70 hover:text-brand-light transition-colors">About</Link>
         </div>
         <div className="flex items-center space-x-4">
           {mounted && isAuthenticated ? (

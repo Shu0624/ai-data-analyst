@@ -23,6 +23,10 @@ import pandas as pd
 from groq import Groq
 from dotenv import load_dotenv
 from fastapi import HTTPException
+import urllib.parse
+import base64
+import hashlib
+from cryptography.fernet import Fernet
 
 from services.sql_validator import validate_sql_ast, estimate_query_complexity
 
@@ -116,8 +120,13 @@ def build_schema_text(dataset) -> str:
     - Quotes column names with spaces
     - Shows sample values so LLM uses correct WHERE clause values
     """
+    dialect = "DuckDB"
+    if getattr(dataset, "dataset_type", None) == "database" and dataset.database_connection:
+        db_type = dataset.database_connection.get("db_type", "postgresql")
+        dialect = "PostgreSQL" if db_type == "postgresql" else "MySQL"
+
     lines = [
-        f"Database dialect: DuckDB",
+        f"Database dialect: {dialect}",
         f"Dataset: {dataset.dataset_name}",
     ]
     # Include user-provided dataset description if available
@@ -157,6 +166,9 @@ def execute_sql_duckdb(sql: str, dataset) -> pd.DataFrame:
     Execute SQL on uploaded CSV/Excel files using DuckDB.
     Memory limited, thread limited, auto LIMIT injected.
     """
+    if getattr(dataset, "dataset_type", None) == "database":
+        return execute_sql_external(sql, dataset)
+
     if not dataset.file_path:
         raise HTTPException(422, "Dataset has no file path — cannot execute SQL")
 
@@ -224,3 +236,85 @@ def execute_sql_duckdb(sql: str, dataset) -> pd.DataFrame:
         raise RuntimeError(f"Unexpected error: {str(e)}")
     finally:
         conn.close()
+
+
+# ── External SQL Database Connection Helpers ──────────────────
+
+def get_encryption_key() -> bytes:
+    """Derives a 32-byte Fernet key from the SECRET_KEY in .env."""
+    secret = os.getenv("SECRET_KEY", "fallback_key_for_ai_data_analyst_2026_shubham")
+    h = hashlib.sha256(secret.encode()).digest()
+    return base64.urlsafe_b64encode(h)
+
+
+def encrypt_password(password: str) -> str:
+    """Encrypts a password string using AES Fernet symmetric encryption."""
+    key = get_encryption_key()
+    f = Fernet(key)
+    return f.encrypt(password.encode()).decode()
+
+
+def decrypt_password(encrypted_password: str) -> str:
+    """Decrypts an encrypted password string using AES Fernet symmetric encryption."""
+    key = get_encryption_key()
+    f = Fernet(key)
+    return f.decrypt(encrypted_password.encode()).decode()
+
+
+def execute_sql_external(sql: str, dataset) -> pd.DataFrame:
+    """
+    Execute SQL directly against the external connected database (PostgreSQL or MySQL).
+    Decrypts the password, builds the engine, injects a LIMIT if missing, and
+    executes query safely returning a pandas DataFrame.
+    """
+    from sqlalchemy import create_engine, text
+
+    conn_info = getattr(dataset, "database_connection", None)
+    if not conn_info:
+        raise HTTPException(422, "No connection details found for this database dataset")
+
+    db_type = conn_info.get("db_type", "postgresql")
+    host = conn_info.get("host")
+    port = conn_info.get("port")
+    username = conn_info.get("username")
+    database = conn_info.get("database")
+    enc_password = conn_info.get("password")
+
+    if not enc_password:
+        raise HTTPException(422, "No password saved for database connection")
+
+    try:
+        password = decrypt_password(enc_password)
+    except Exception as e:
+        raise RuntimeError(f"Failed to decrypt database password: {e}")
+
+    # Quote username/password for URL safety
+    user_q = urllib.parse.quote_plus(username)
+    pass_q = urllib.parse.quote_plus(password)
+
+    if db_type == "postgresql":
+        conn_string = f"postgresql://{user_q}:{pass_q}@{host}:{port}/{database}"
+    else:
+        conn_string = f"mysql+pymysql://{user_q}:{pass_q}@{host}:{port}/{database}"
+
+    try:
+        ext_engine = create_engine(
+            conn_string,
+            connect_args={"connect_timeout": 10},
+            pool_pre_ping=True,
+        )
+
+        # Inject LIMIT if missing to avoid Out-Of-Memory on large external tables
+        sql_check = sql.lower().strip()
+        if "limit" not in sql_check and "count(" not in sql_check:
+            sql = sql.rstrip(";").rstrip() + " LIMIT 10000"
+
+        with ext_engine.connect() as conn:
+            df = pd.read_sql_query(text(sql), con=conn)
+
+        return df
+    except Exception as e:
+        raise RuntimeError(f"External SQL execution error: {str(e)}")
+    finally:
+        if "ext_engine" in locals():
+            ext_engine.dispose()

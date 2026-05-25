@@ -17,7 +17,7 @@ export function DataNeuron() {
   if (!mounted) return null
 
   return (
-    <div className="relative w-full aspect-square max-w-[800px] flex items-center justify-center">
+    <div className="relative w-full aspect-square max-w-[800px] flex items-center justify-center" aria-hidden="true" role="presentation">
       {/* Ambient glow matching the deep space tech theme behind the video */}
       <div className="absolute w-[50%] h-[50%] bg-[#0B48A1] rounded-full blur-[100px] opacity-60 animate-pulse pointer-events-none" />
       <div className="absolute w-[30%] h-[30%] bg-cyan-400/50 rounded-full blur-[80px] opacity-30 mix-blend-screen pointer-events-none" />

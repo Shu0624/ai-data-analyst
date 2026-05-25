@@ -475,15 +475,39 @@ def generate_chart_config_smart(df: pd.DataFrame, user_query: str) -> Optional[d
     """
     Intent-aware chart generation.
     Priority: user intent keywords > structural detection.
+    Skips ID-like columns (PRN, roll numbers, unique identifiers).
     """
     if df.empty or len(df.columns) < 1:
         return None
 
-    num_cols = df.select_dtypes(include=["number"]).columns.tolist()
-    str_cols = df.select_dtypes(include=["object", "string", "category"]).columns.tolist()
+    import re as _re
 
+    # ── ID column detection ─────────────────────────────────────
+    ID_PATTERNS = _re.compile(r'^(id|_id|prn|roll|reg|enroll|sno|sr|serial|index|uuid|code|key|ref|num|number)$', _re.I)
+    ID_SUFFIX   = _re.compile(r'(id|_id|code|number|num|key|ref|prn|roll)$', _re.I)
+
+    def _is_id_col(col_name: str, series: pd.Series) -> bool:
+        name = col_name.strip()
+        if ID_PATTERNS.match(name) or ID_SUFFIX.search(name):
+            return True
+        # High cardinality string = likely ID
+        if series.dtype == object and series.nunique() / max(len(series), 1) > 0.9 and len(series) > 5:
+            return True
+        # Long numeric strings (like 2301012137)
+        if series.dtype == object and series.dropna().apply(lambda x: bool(_re.match(r'^\d{6,}$', str(x)))).all():
+            return True
+        return False
+
+    # Filter columns, skipping IDs
+    all_num = df.select_dtypes(include=["number"]).columns.tolist()
+    all_str = df.select_dtypes(include=["object", "string", "category"]).columns.tolist()
+    
+    num_cols = [c for c in all_num if not _is_id_col(c, df[c])]
+    str_cols = [c for c in all_str if not _is_id_col(c, df[c])]
+
+    # Fallback if everything was filtered
     if not num_cols:
-        return None
+        num_cols = all_num
 
     # ── Single-value aggregate (SUM, COUNT, AVG result) → number card ──
     if len(df) == 1 and num_cols and not str_cols:
@@ -808,6 +832,23 @@ def generate_sql_agent(state: AgentState) -> AgentState:
         f"If the current query is a follow-up, modify the previous SQL instead of writing from scratch.\n"
     ) if last_sql else ""
 
+    # Detect academic dataset once
+    is_academic = detect_academic_dataset(schema)
+
+    # Build mandatory grade rules as an explicit SQL rule (not appendix)
+    grade_rules = ""
+    if is_academic:
+        grade_rules = (
+            "\n\nCRITICAL GRADE RULES (MANDATORY — violating these is WRONG):\n"
+            "- Below 40 marks = FAIL. 40 and above = PASS.\n"
+            "- FAIL grade: ONLY 'FF'. Use: WHERE Grade = 'FF'\n"
+            "- EE is a PASS grade (40-50 marks, above 40 = PASS). NEVER treat EE as fail.\n"
+            "- ALL PASS grades: EX, AA, AB, BB, BC, CC, CD, DD, DE, EE\n"
+            "- For 'pass students': WHERE Grade != 'FF'\n"
+            "- For 'fail students': WHERE Grade = 'FF'\n"
+            "- NEVER use Grade = 'EE' for fail queries. EE = PASS.\n"
+        )
+
     messages = [
         {
             "role": "system",
@@ -826,13 +867,14 @@ def generate_sql_agent(state: AgentState) -> AgentState:
                 "- For columns with spaces in names: always use double quotes: \"Column Name\".\n"
                 "- For table names with spaces: always use double quotes: \"Table Name\".\n"
                 "- DuckDB supports regexp_extract(col, pattern, group) for text parsing.\n"
-                "- After the SQL, write one sentence explaining it.\n\n"
+                "- After the SQL, write one sentence explaining it.\n"
+                f"{grade_rules}\n"
                 f"Schema:\n{schema}"
                 f"{plan_section}"
                 f"{memory_section}"
                 f"{last_section}"
                 f"\nExamples based on this dataset:\n{few_shots}"
-                + (f"\n\n{ACADEMIC_DOMAIN_CONTEXT[:2000]}" if detect_academic_dataset(schema) else "")
+                + (f"\n\n{ACADEMIC_DOMAIN_CONTEXT[:3000]}" if is_academic else "")
             ),
         },
         {"role": "user", "content": f"Generate SQL: {state['user_query']}"},

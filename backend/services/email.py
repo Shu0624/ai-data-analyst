@@ -1,27 +1,32 @@
 """
-services/email.py — Resend email service for OTP delivery
-"""
- 
-import os
-import resend
-from dotenv import load_dotenv
- 
-load_dotenv()
- 
-resend.api_key = os.getenv("RESEND_API_KEY", "")
-FROM_EMAIL     = os.getenv("RESEND_FROM_EMAIL", "onboarding@resend.dev")
+services/email.py — Gmail SMTP email service for OTP delivery
 
-# FIX (LOW): warn at startup if key is missing so emails don't silently fail.
-if not resend.api_key:
+Sends OTP emails via Gmail SMTP using App Password authentication.
+Falls back to printing OTP in server logs if email delivery fails.
+"""
+
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GMAIL_ADDRESS  = os.getenv("GSMTP_FROM_EMAIL", "")
+GMAIL_APP_PASS = os.getenv("GSMTP_APP_PASSWORD", "")
+APP_NAME       = "AI Data Analyst"
+
+# Warn at startup if credentials are missing
+if not GMAIL_ADDRESS or not GMAIL_APP_PASS:
     import warnings
     warnings.warn(
-        "RESEND_API_KEY is not set — all OTP emails will fail silently. "
-        "Set RESEND_API_KEY in your .env file.",
+        "GSMTP_FROM_EMAIL or GSMTP_APP_PASSWORD is not set — "
+        "OTP emails will fail. Set them in your .env file.",
         RuntimeWarning, stacklevel=1,
     )
-APP_NAME       = "AI Data Analyst"
- 
- 
+
+
 def send_otp_email(
     to_email:  str,
     otp_code:  str,
@@ -29,9 +34,14 @@ def send_otp_email(
     user_name: str = "User",
 ) -> bool:
     """
-    Send OTP email via Resend.
+    Send OTP email via Gmail SMTP.
     Returns True on success, False on failure — never raises.
     """
+    # Always print OTP to server logs for easy local development testing
+    print(f"\n==================================================")
+    print(f"[DEV ONLY] Generated OTP for {to_email}: {otp_code}")
+    print(f"==================================================\n")
+
     if purpose == "verify_email":
         subject = f"Verify your {APP_NAME} account"
         heading = "Verify your email address"
@@ -42,7 +52,7 @@ def send_otp_email(
         heading = "Reset your password"
         note    = "This OTP expires in 10 minutes. If you didn't request this, ignore this email."
         body    = f"Use the OTP below to reset your {APP_NAME} password."
- 
+
     html = f"""<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8">
@@ -74,14 +84,19 @@ def send_otp_email(
 </div>
 </body>
 </html>"""
- 
+
     try:
-        resend.Emails.send({
-            "from":    FROM_EMAIL,
-            "to":      [to_email],
-            "subject": subject,
-            "html":    html,
-        })
+        msg = MIMEMultipart("alternative")
+        msg["From"]    = f"{APP_NAME} <{GMAIL_ADDRESS}>"
+        msg["To"]      = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(html, "html"))
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(GMAIL_ADDRESS, GMAIL_APP_PASS)
+            server.sendmail(GMAIL_ADDRESS, to_email, msg.as_string())
+
+        print(f"[EMAIL OK] OTP sent to {to_email} via Gmail SMTP")
         return True
     except Exception as e:
         print(f"[EMAIL ERROR] Failed to send to {to_email}: {e}")

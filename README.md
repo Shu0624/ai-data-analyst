@@ -286,6 +286,9 @@ DATABASE_URL=postgresql://user:pass@localhost/db
 
 uvicorn main:app --reload
 
+cd "E:\F\Ai data analyst\backend"
+.\.venv\Scripts\python.exe -m uvicorn main:app --reload --port 8000 --host 127.0.0.1
+
 
 ---
 

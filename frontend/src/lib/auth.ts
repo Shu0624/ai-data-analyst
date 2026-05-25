@@ -199,3 +199,21 @@ export async function deleteAccount(): Promise<MessageResponse> {
     throw new Error(extractError(err))
   }
 }
+
+/** POST /auth/dev-login — [DEV ONLY] bypass credentials & OTP verification */
+export async function devLoginUser(): Promise<UserResponse> {
+  try {
+    const { data: tokens } = await api.post<TokenResponse>("/auth/dev-login")
+    useAuthStore.getState().login(
+      { id: "", name: "", email: "dev@localhost.com", role: "", is_verified: true, created_at: "" },
+      tokens.access_token,
+      tokens.refresh_token
+    )
+    const { data: user } = await api.get<UserResponse>("/auth/me")
+    useAuthStore.getState().login(user, tokens.access_token, tokens.refresh_token)
+    return user
+  } catch (err) {
+    useAuthStore.getState().logout()
+    throw new Error(extractError(err))
+  }
+}

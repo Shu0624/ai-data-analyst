@@ -14,24 +14,16 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    // Wait for Zustand to hydrate from localStorage before checking auth
     if (!hasHydrated) return
-
     if (!isAuthenticated || !token) {
       router.replace("/login")
       return
     }
-
-    // Token exists — verify it's still valid
     fetchCurrentUser()
       .then(() => setIsReady(true))
-      .catch(() => {
-        // Token invalid — interceptor handles logout+redirect
-        setIsReady(true) // Let the interceptor redirect handle it
-      })
+      .catch(() => setIsReady(true))
   }, [hasHydrated, isAuthenticated, token, router])
 
-  // Still loading (hydrating from localStorage or verifying token)
   if (!hasHydrated || !isReady) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -43,11 +35,10 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <DashboardNavbar />
-      <main className="flex-1 mt-20">
-        {/* Subtle ambient lighting - Warm Gold/Champagne */}
-        <div className="fixed top-[10%] right-[-10%] w-[800px] h-[800px] bg-brand/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="fixed bottom-[-10%] left-[10%] w-[600px] h-[600px] bg-[#D4A853]/5 blur-[120px] rounded-full pointer-events-none" />
-        
+      <main className="flex-1 mt-20" id="main-content">
+        {/* Subtle ambient lighting */}
+        <div className="fixed top-[10%] right-[-10%] w-[800px] h-[800px] bg-brand/5 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
+        <div className="fixed bottom-[-10%] left-[10%] w-[600px] h-[600px] bg-[#D4A853]/5 blur-[120px] rounded-full pointer-events-none" aria-hidden="true" />
         <div className="relative z-10 p-6 md:p-10 max-w-7xl mx-auto min-h-screen">
           {children}
         </div>

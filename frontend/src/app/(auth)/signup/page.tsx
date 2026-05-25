@@ -59,7 +59,7 @@ export default function SignupPage() {
                   <Input 
                     id="name" 
                     type="text" 
-                    placeholder="John Doe" 
+                    placeholder="Enter your name" 
                     className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light" 
                     required 
                     value={name}
@@ -75,7 +75,7 @@ export default function SignupPage() {
                   <Input 
                     id="email" 
                     type="email" 
-                    placeholder="name@company.com" 
+                    placeholder="Enter your gmail" 
                     className="pl-12 h-14 bg-surface/[0.5] text-base border-surface-border text-foreground placeholder:text-foreground/30 focus-visible:bg-surface/[0.8] focus-visible:border-brand-light focus-visible:ring-brand-light" 
                     required 
                     value={email}

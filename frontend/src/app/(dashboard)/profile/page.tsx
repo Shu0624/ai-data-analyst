@@ -147,6 +147,29 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Account Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-1 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.03]">
+        <div className="p-4 rounded-xl">
+          <p className="text-[10px] text-foreground/50 uppercase tracking-widest font-semibold mb-1">Role</p>
+          <p className="text-lg font-bold capitalize">{user?.role || "User"}</p>
+        </div>
+        <div className="p-4 rounded-xl">
+          <p className="text-[10px] text-foreground/50 uppercase tracking-widest font-semibold mb-1">Status</p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <p className="text-lg font-bold text-emerald-400">Active</p>
+          </div>
+        </div>
+        <div className="p-4 rounded-xl">
+          <p className="text-[10px] text-foreground/50 uppercase tracking-widest font-semibold mb-1">Member Since</p>
+          <p className="text-lg font-bold">{user?.created_at ? new Date(user.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric" }) : "—"}</p>
+        </div>
+        <div className="p-4 rounded-xl">
+          <p className="text-[10px] text-foreground/50 uppercase tracking-widest font-semibold mb-1">Plan</p>
+          <p className="text-lg font-bold text-brand-light">Free Tier</p>
+        </div>
+      </div>
+
       {/* Personal Info */}
       <Card>
         <CardHeader>
@@ -189,13 +212,16 @@ export default function ProfilePage() {
               <select
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
-                className="w-full h-12 px-4 bg-surface/[0.05] border border-surface-border rounded-xl text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50"
+                className="w-full h-12 px-4 rounded-xl text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-brand/50 border border-surface-border cursor-pointer"
+                style={{ backgroundColor: '#0d0d14' }}
               >
-                <option value="">Select...</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="expert">Expert</option>
+                <option value="" style={{ backgroundColor: '#0d0d14', color: '#999' }}>Select...</option>
+                <option value="student" style={{ backgroundColor: '#0d0d14' }}>Student</option>
+                <option value="beginner" style={{ backgroundColor: '#0d0d14' }}>Beginner Analyst</option>
+                <option value="intermediate" style={{ backgroundColor: '#0d0d14' }}>Intermediate</option>
+                <option value="professional" style={{ backgroundColor: '#0d0d14' }}>Professional Data Analyst</option>
+                <option value="advanced" style={{ backgroundColor: '#0d0d14' }}>Advanced / Senior</option>
+                <option value="lead" style={{ backgroundColor: '#0d0d14' }}>Team Lead</option>
               </select>
             </div>
           </div>

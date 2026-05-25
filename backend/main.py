@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 import models
 
-from routers import auth, users, datasets, chat, ai, documents
+from routers import auth, users, datasets, chat, ai, documents, whatsapp
 from services.logger import setup_logger
 
 # Setup root logger
@@ -25,7 +25,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,3 +48,4 @@ app.include_router(datasets.router, prefix="/datasets", tags=["Datasets"])
 app.include_router(chat.router,     prefix="/chat",     tags=["Chat"])
 app.include_router(ai.router,       prefix="/ai",       tags=["AI"])
 app.include_router(documents.router, prefix="/documents", tags=["Documents"])
+app.include_router(whatsapp.router,  prefix="/whatsapp",  tags=["WhatsApp"])

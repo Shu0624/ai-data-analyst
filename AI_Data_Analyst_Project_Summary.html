@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Data Analyst — Project Summary</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;line-height:1.7;padding:0}
+  .page{max-width:850px;margin:0 auto;padding:40px 50px}
+  h1{font-size:28px;font-weight:800;color:#0f0f23;margin-bottom:4px;letter-spacing:-0.5px}
+  .subtitle{font-size:14px;color:#6366f1;font-weight:600;margin-bottom:30px}
+  h2{font-size:20px;font-weight:700;color:#1e1e3f;margin:32px 0 14px;padding-bottom:8px;border-bottom:2px solid #6366f1}
+  h3{font-size:16px;font-weight:600;color:#333;margin:18px 0 8px}
+  p,li{font-size:13.5px;color:#333;line-height:1.75}
+  ul{padding-left:22px;margin:8px 0}
+  li{margin-bottom:4px}
+  .highlight-box{background:linear-gradient(135deg,#f0f0ff,#e8e8ff);border-left:4px solid #6366f1;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+  .highlight-box p{margin:0;font-size:13px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  th{background:#1e1e3f;color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+  td{padding:9px 14px;border-bottom:1px solid #e0e0e0}
+  tr:nth-child(even){background:#f8f8fc}
+  .flow-box{background:#fafafe;border:1px solid #e0e0ef;border-radius:10px;padding:20px;margin:14px 0;font-family:monospace;font-size:12.5px;line-height:2;white-space:pre-wrap}
+  .tag{display:inline-block;background:#6366f1;color:#fff;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
+  .tag-green{background:#10b981}
+  .tag-orange{background:#f59e0b;color:#1a1a2e}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+  .card{background:#f8f8fc;border:1px solid #e0e0ef;border-radius:10px;padding:16px}
+  .card h3{margin-top:0;font-size:14px;color:#6366f1}
+  .card ul{padding-left:18px}
+  .card li{font-size:12.5px}
+  strong{color:#1e1e3f}
+  .section-why{background:linear-gradient(135deg,#fef9ec,#fdf3d7);border-left:4px solid #f59e0b;padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}
+  .footer{text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:11px;color:#999}
+  @media print{.page{padding:20px 30px}h2{break-after:avoid}table,img,.flow-box{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>🚀 AI Data Analyst Platform</h1>
+<p class="subtitle">Full-Stack Agentic AI Platform — Deep Project Summary</p>
+
+<!-- ======== 1. OVERVIEW ======== -->
+<h2>1. Project Overview</h2>
+<p>The <strong>AI Data Analyst</strong> is a production-grade, full-stack platform that enables users to analyze structured datasets (CSV/Excel) and PDF documents using <strong>natural language</strong>. Instead of writing SQL or Python manually, users simply ask questions in plain English — the platform's agentic AI pipeline automatically generates SQL, executes it, and returns rich results including data tables, interactive charts, business insights, and actionable recommendations.</p>
+<p>Additionally, the platform integrates a <strong>WhatsApp Business Chatbot</strong> module that allows businesses (gyms, clinics, coaching institutes, etc.) to automate customer engagement, lead capture, and AI-powered FAQ responses through WhatsApp.</p>
+
+<div class="highlight-box">
+<p><strong>In one line:</strong> "Ask your data anything in English — get SQL, charts, insights, and recommendations instantly, powered by a 20-node LangGraph agentic AI pipeline."</p>
+</div>
+
+<!-- ======== 2. WHY THIS PROJECT ======== -->
+<h2>2. Why This Project Was Necessary</h2>
+<div class="section-why">
+<p><strong>Problem Statement:</strong> In most organizations, data analysis requires SQL expertise and technical knowledge. Business users, managers, students, and non-technical stakeholders cannot directly query their data — they depend on data teams, creating bottlenecks.</p>
+</div>
+
+<h3>Key Problems Solved</h3>
+<table>
+<tr><th>Problem</th><th>Our Solution</th></tr>
+<tr><td>Non-technical users can't write SQL</td><td>Natural Language → SQL auto-generation via LLM</td></tr>
+<tr><td>Manual chart creation is time-consuming</td><td>Auto chart generation (bar, line, pie, scatter) based on query intent</td></tr>
+<tr><td>No actionable insights from raw data</td><td>AI-generated business insights + recommendations per query</td></tr>
+<tr><td>PDF documents are hard to search/query</td><td>Vectorless RAG: PageIndex tree-based document Q&A</td></tr>
+<tr><td>Businesses lose leads on WhatsApp</td><td>AI-powered WhatsApp chatbot with lead capture & CRM</td></tr>
+<tr><td>Data analysis tools are expensive</td><td>Open-source, self-hostable platform using free LLM APIs</td></tr>
+</table>
+
+<h3>Real-World Impact</h3>
+<ul>
+<li><strong>For Students/Researchers:</strong> Upload academic datasets and ask questions like "Which branch has the highest CGPA?" without writing a single SQL query.</li>
+<li><strong>For Businesses:</strong> Upload sales data and get instant insights like "Top 5 products by revenue" with auto-generated charts.</li>
+<li><strong>For Small Businesses:</strong> Automate WhatsApp customer support with AI — capture leads, answer FAQs, and qualify prospects 24/7.</li>
+</ul>
+
+<!-- ======== 3. TECH STACK ======== -->
+<h2>3. Technology Stack</h2>
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr>
+<tr><td>Backend Framework</td><td>FastAPI (Python)</td><td>High-performance async REST API</td></tr>
+<tr><td>Frontend Framework</td><td>Next.js (React + TypeScript)</td><td>Modern dashboard UI</td></tr>
+<tr><td>AI/LLM Engine</td><td>Groq (LLaMA 3.1 8B)</td><td>Ultra-fast LLM inference</td></tr>
+<tr><td>Agent Orchestration</td><td>LangGraph (StateGraph)</td><td>Multi-agent pipeline with 20 nodes</td></tr>
+<tr><td>Application Database</td><td>PostgreSQL + SQLAlchemy ORM</td><td>Users, sessions, queries, leads</td></tr>
+<tr><td>Analytics Query Engine</td><td>DuckDB (in-memory)</td><td>Fast SQL on CSV/Excel files</td></tr>
+<tr><td>SQL Validation</td><td>sqlglot</td><td>Syntax validation before execution</td></tr>
+<tr><td>Data Processing</td><td>Pandas + NumPy</td><td>Data manipulation & statistics</td></tr>
+<tr><td>PDF Processing</td><td>PyMuPDF + PyPDF2</td><td>Text extraction from PDFs</td></tr>
+<tr><td>Authentication</td><td>JWT + bcrypt + OTP</td><td>Secure auth with email verification</td></tr>
+<tr><td>Email Service</td><td>Resend API</td><td>Transactional OTP emails</td></tr>
+<tr><td>WhatsApp API</td><td>Meta Cloud API v21.0</td><td>Business messaging & chatbot</td></tr>
+<tr><td>Code Execution</td><td>Sandboxed subprocess</td><td>Safe Python code for statistics</td></tr>
+</table>
+
+<!-- ======== 4. ARCHITECTURE ======== -->
+<h2>4. System Architecture</h2>
+<h3>4.1 High-Level Architecture</h3>
+<div class="flow-box">┌─────────────┐     ┌──────────────┐     ┌──────────────────┐
+│   Frontend   │────▶│   FastAPI     │────▶│  LangGraph Agent │
+│  (Next.js)   │◀────│   Backend     │◀────│  (20-Node Graph) │
+└─────────────┘     └──────┬───────┘     └────────┬─────────┘
+                           │                      │
+                    ┌──────▼───────┐        ┌─────▼──────┐
+                    │  PostgreSQL  │        │   DuckDB    │
+                    │  (App Data)  │        │ (Analytics) │
+                    └──────────────┘        └────────────┘
+                           │
+                    ┌──────▼───────┐     ┌──────────────┐
+                    │  WhatsApp    │     │  Groq LLM    │
+                    │  Cloud API   │     │ (LLaMA 3.1)  │
+                    └──────────────┘     └──────────────┘</div>
+
+<h3>4.2 Database Schema (17 Tables)</h3>
+<div class="two-col">
+<div class="card">
+<h3>Core Tables</h3>
+<ul>
+<li><strong>Users</strong> — accounts + OTP auth</li>
+<li><strong>UserProfiles</strong> — company, industry</li>
+<li><strong>RefreshTokens</strong> — JWT revocation</li>
+<li><strong>Datasets</strong> — uploaded CSV/Excel</li>
+<li><strong>DatasetTables</strong> — table metadata</li>
+<li><strong>DatasetColumns</strong> — column types & samples</li>
+<li><strong>ChatSessions</strong> — conversation threads</li>
+<li><strong>ChatMessages</strong> — user/AI messages</li>
+</ul>
+</div>
+<div class="card">
+<h3>AI + WhatsApp Tables</h3>
+<ul>
+<li><strong>AIQueries</strong> — SQL + execution time</li>
+<li><strong>QueryResults</strong> — result previews (JSONB)</li>
+<li><strong>Visualizations</strong> — chart configs</li>
+<li><strong>Insights</strong> — AI-generated findings</li>
+<li><strong>Recommendations</strong> — action items</li>
+<li><strong>Documents</strong> — PDFs + PageIndex tree</li>
+<li><strong>DocumentQueries</strong> — Q&A history</li>
+<li><strong>Clients</strong> — WhatsApp businesses</li>
+<li><strong>Leads + LeadMessages</strong> — CRM</li>
+</ul>
+</div>
+</div>
+
+<!-- ======== 5. CORE MODULES ======== -->
+<h2>5. Core Modules & Workflow</h2>
+
+<h3>5.1 Module A — AI Data Analysis (NL → SQL → Insights)</h3>
+<p>This is the heart of the platform. A <strong>20-node LangGraph agentic pipeline</strong> processes every natural language query through these stages:</p>
+<div class="flow-box">User Query: "Top 5 expensive cars by average price"
+    │
+    ▼
+[1. Router Agent] ─── Classifies: sql | python | explain | refine
+    │
+    ▼
+[2. Memory Retriever] ─── Fetches session context (hierarchical RAG)
+    │
+    ▼
+[3. Planning Agent] ─── Creates step-by-step execution plan + mismatch detection
+    │
+    ▼
+[4. Schema Selector] ─── Picks only relevant tables (reduces errors ~40%)
+    │
+    ▼
+[5. SQL Generator] ─── Generates SQL with few-shot examples + plan
+    │
+    ▼
+[6. SQL Reviewer] ─── Two-pass review before execution
+    │
+    ▼
+[7. SQL Validator] ─── Syntax check via sqlglot
+    │
+    ▼
+[8. SQL Executor] ─── Runs on DuckDB (in-memory, fast)
+    │
+    ▼
+[9. Result Validator] ─── Checks for empty/error results
+    │
+    ▼
+[10. Stats Enricher] ─── Adds quantitative context (mean, min, max)
+    │
+    ▼
+[11. Insights Agent] ─── Generates 3-5 business insights with numbers
+    │
+    ▼
+[12. Web Scraper] ─── Fetches current news context (3s timeout)
+    │
+    ▼
+[13. Recommendations Agent] ─── Actionable business recommendations
+    │
+    ▼
+[14. Chart Agent] ─── Intent-aware auto chart (bar/line/pie/scatter)
+    │
+    ▼
+[15. Follow-up Agent] ─── Suggests 3 next questions
+    │
+    ▼
+[16. Memory Writer] ─── Saves turn to hierarchical session memory
+    │
+    ▼
+[17. Final Agent] ─── Assembles complete response → Frontend</div>
+
+<p><strong>Key Engineering Decisions:</strong></p>
+<ul>
+<li><strong>Self-correcting SQL:</strong> Up to 3 retry attempts with error classification & recovery</li>
+<li><strong>Error classification:</strong> Distinguishes column errors, syntax errors, and type mismatches for targeted fixes</li>
+<li><strong>Few-shot examples:</strong> Generated dynamically from actual table/column names</li>
+<li><strong>Schema-first reasoning:</strong> LLM always sees the real schema, reducing hallucination</li>
+<li><strong>Intent-aware charts:</strong> Keywords like "trend" → line chart, "proportion" → pie chart</li>
+<li><strong>Academic domain detection:</strong> Auto-injects DBATU grading rules when student datasets are detected</li>
+</ul>
+
+<h3>5.2 Module B — Document Q&A (Vectorless RAG)</h3>
+<p>A novel <strong>"vectorless RAG"</strong> approach — no embeddings, no vector database. Instead uses LLM reasoning over a hierarchical document index:</p>
+<div class="flow-box">Upload PDF → Extract Pages → Build PageIndex Tree
+    │
+User asks: "What is the admission process?"
+    │
+    ▼
+[Tree Search] LLM navigates hierarchical index → finds relevant sections
+    │
+    ▼
+[Page Retrieval] Extracts text from identified pages (max 8000 chars)
+    │
+    ▼
+[Answer Generation] LLM generates answer with page citations + confidence score</div>
+<ul>
+<li>Supports PDFs up to 50MB</li>
+<li>Tree search with max depth of 5 levels</li>
+<li>Confidence scoring (0.0 – 1.0) on every answer</li>
+<li>All Q&A history stored in PostgreSQL</li>
+</ul>
+
+<h3>5.3 Module C — WhatsApp Business Chatbot</h3>
+<p>Complete WhatsApp automation system using Meta Cloud API v21.0:</p>
+<div class="flow-box">Customer sends "Hi" on WhatsApp
+    │
+    ▼
+Meta Webhook → POST /whatsapp/webhook
+    │
+    ▼
+[Find Client] Match business by WhatsApp number
+    │
+    ▼
+[Find/Create Lead] Auto-create CRM lead entry
+    │
+    ▼
+[First-time?] → Send branded greeting + interactive buttons
+[Returning?]  → Route to AI reply engine
+    │
+    ▼
+[AI Reply Priority]
+  1. Document Q&A (if FAQ PDF attached) → PageIndex search
+  2. LLM Fallback → Niche-specific prompt (gym/clinic/coaching/etc.)
+    │
+    ▼
+Send reply via WhatsApp Cloud API + log all messages</div>
+<ul>
+<li><strong>Multi-niche support:</strong> gym, coaching, clinic, real estate, D2C, education</li>
+<li><strong>Lead management:</strong> status tracking (new → contacted → qualified → converted)</li>
+<li><strong>Analytics dashboard:</strong> leads by status, conversion rate, top interests</li>
+<li><strong>Interactive messages:</strong> buttons, list menus for guided conversations</li>
+</ul>
+
+<h3>5.4 Module D — Sandboxed Python Execution</h3>
+<p>For queries SQL can't answer (correlations, clustering, statistical tests), the platform generates Python code and executes it in a <strong>sandboxed subprocess</strong>:</p>
+<ul>
+<li>30-second timeout, restricted imports (only pandas/numpy/math)</li>
+<li>Banned modules: os, subprocess, socket, requests (security)</li>
+<li>Dataset limited to 10K rows for safety</li>
+<li>JSON-serialized output capture</li>
+</ul>
+
+<!-- ======== 6. MEMORY SYSTEM ======== -->
+<h2>6. Hierarchical Memory System</h2>
+<p>Production-grade session memory with 4 layers:</p>
+<table>
+<tr><th>Layer</th><th>What It Does</th></tr>
+<tr><td>Layer 1: Session Summary</td><td>LLM-generated summary of past analysis turns (non-degrading)</td></tr>
+<tr><td>Layer 2: Structured Entities</td><td>Tables used, filters applied, aggregation types (extracted from SQL)</td></tr>
+<tr><td>Layer 3: Recent Turns</td><td>Last 3 relevant turns with keyword-based relevance filtering</td></tr>
+<tr><td>Layer 4: Last SQL</td><td>Injected only for follow-up queries (intent detection)</td></tr>
+</table>
+<p><strong>Engineering features:</strong> Thread-safe with locks, session TTL (2hr), LRU eviction (max 1000 sessions), token-aware compression via LLM.</p>
+
+<!-- ======== 7. AUTH ======== -->
+<h2>7. Authentication & Security</h2>
+<ul>
+<li><strong>JWT-based auth:</strong> Access tokens (60min) + Refresh tokens (7 days) with DB-backed revocation</li>
+<li><strong>OTP email verification:</strong> bcrypt-hashed OTPs, 10-min expiry, rate limiting (60s), max 5 attempts</li>
+<li><strong>Password security:</strong> bcrypt hashing, timing-safe comparison, dummy hash for non-existent users</li>
+<li><strong>Refresh token rotation:</strong> Old token revoked on every refresh (prevents replay attacks)</li>
+<li><strong>Role-based access:</strong> User/Admin roles with hardcoded role assignment (no privilege escalation)</li>
+</ul>
+
+<!-- ======== 8. API ======== -->
+<h2>8. REST API Endpoints (30+ Endpoints)</h2>
+<table>
+<tr><th>Module</th><th>Key Endpoints</th></tr>
+<tr><td>Auth (10)</td><td>signup, verify-email, login, refresh, logout, forgot-password, reset-password, change-password, me, delete-account</td></tr>
+<tr><td>Datasets (5)</td><td>upload CSV/Excel, list, get details, get schema, delete</td></tr>
+<tr><td>AI Analysis (5)</td><td>analyze (full pipeline), agent (smart routing), generate-sql, results, insights, recommendations, visualizations</td></tr>
+<tr><td>Chat (4)</td><td>create session, list sessions, get messages, send message</td></tr>
+<tr><td>Documents (5)</td><td>upload PDF, list, get details, ask question, get Q&A history, delete</td></tr>
+<tr><td>WhatsApp (9)</td><td>webhook (GET/POST), create/list/get/update clients, get leads, lead messages, analytics</td></tr>
+</table>
+
+<!-- ======== 9. FRONTEND ======== -->
+<h2>9. Frontend (Next.js Dashboard)</h2>
+<ul>
+<li><strong>Framework:</strong> Next.js with TypeScript + Zustand state management</li>
+<li><strong>Pages:</strong> Dashboard (chat + analysis), Documents (upload + Q&A), Profile</li>
+<li><strong>Design:</strong> Dark theme with glassmorphism, ambient lighting effects, smooth animations</li>
+<li><strong>Auth flow:</strong> Auto-hydration from localStorage, dev-login for development</li>
+<li><strong>Charts:</strong> Interactive visualizations rendered from AI-generated chart configs</li>
+</ul>
+
+<!-- ======== 10. PROJECT STRUCTURE ======== -->
+<h2>10. Project Structure</h2>
+<div class="flow-box">AI-Data-Analyst/
+├── main.py                    # FastAPI app entry point
+├── database.py                # PostgreSQL connection (pooled, 10+20 connections)
+├── models.py                  # 17 SQLAlchemy ORM models
+├── routers/                   # API endpoint handlers
+│   ├── auth.py                # 822 lines — full auth system
+│   ├── ai.py                  # AI analysis endpoints
+│   ├── chat.py                # Chat session management
+│   ├── datasets.py            # Dataset upload & management
+│   ├── documents.py           # PDF upload & Q&A
+│   ├── users.py               # User profile management
+│   └── whatsapp.py            # WhatsApp webhook + CRM (796 lines)
+├── services/                  # Business logic layer
+│   ├── agent.py               # 2133 lines — 20-node LangGraph pipeline
+│   ├── memory.py              # Hierarchical RAG memory system
+│   ├── document_qa.py         # Vectorless RAG document Q&A
+│   ├── document_processor.py  # PDF text extraction + PageIndex
+│   ├── python_executor.py     # Sandboxed Python execution
+│   ├── whatsapp.py            # WhatsApp Cloud API client
+│   ├── sql_validator.py       # SQL syntax validation
+│   ├── academic_context.py    # DBATU grading domain knowledge
+│   ├── utils.py               # Groq API, DuckDB, schema builder
+│   ├── cache.py               # Response caching
+│   ├── email.py               # OTP email service (Resend)
+│   └── logger.py              # Structured logging
+├── schemas/                   # Pydantic request/response schemas
+├── frontend/                  # Next.js React dashboard
+│   └── src/
+│       ├── app/               # Pages (dashboard, documents, profile)
+│       ├── components/        # UI components + layouts
+│       └── lib/               # API client, auth, state store
+└── uploads/                   # User-uploaded files</div>
+
+<!-- ======== 11. KEY FEATURES ======== -->
+<h2>11. Key Features Summary</h2>
+<div class="two-col">
+<div class="card">
+<h3>🤖 AI Capabilities</h3>
+<ul>
+<li>Natural language → SQL generation</li>
+<li>Self-correcting SQL (3 retries)</li>
+<li>Schema-aware reasoning</li>
+<li>Auto chart generation</li>
+<li>Business insights with numbers</li>
+<li>Follow-up question suggestions</li>
+<li>NL → Python for statistics</li>
+<li>Academic domain auto-detection</li>
+</ul>
+</div>
+<div class="card">
+<h3>🏗️ Engineering Quality</h3>
+<ul>
+<li>Thread-safe memory (no race conditions)</li>
+<li>Session isolation (no cross-user leaks)</li>
+<li>Connection pooling (10+20 overflow)</li>
+<li>Graceful error handling at every level</li>
+<li>SQL injection prevention</li>
+<li>Sandboxed code execution</li>
+<li>Rate limiting on OTP/auth</li>
+<li>Structured logging throughout</li>
+</ul>
+</div>
+</div>
+
+<!-- ======== 12. CONCLUSION ======== -->
+<h2>12. Conclusion</h2>
+<p>The <strong>AI Data Analyst Platform</strong> is a comprehensive, production-grade system that demonstrates mastery across multiple domains:</p>
+<ul>
+<li><strong>Agentic AI:</strong> A sophisticated 20-node LangGraph pipeline with error recovery, memory, and multi-modal output</li>
+<li><strong>Full-Stack Development:</strong> FastAPI backend + Next.js frontend with JWT auth, OTP verification, and role-based access</li>
+<li><strong>Data Engineering:</strong> DuckDB analytics engine, PostgreSQL with 17 normalized tables, and JSONB for flexible storage</li>
+<li><strong>NLP/RAG:</strong> Novel vectorless document Q&A using hierarchical tree search instead of traditional vector embeddings</li>
+<li><strong>Business Automation:</strong> WhatsApp chatbot with CRM, lead scoring, multi-niche support, and analytics dashboard</li>
+<li><strong>Security:</strong> bcrypt password hashing, JWT rotation, OTP rate limiting, sandboxed execution, and SQL injection prevention</li>
+</ul>
+
+<div class="highlight-box">
+<p><strong>Total Codebase:</strong> ~5,000+ lines of backend Python | 17 database models | 30+ API endpoints | 20-node AI agent pipeline | Full React dashboard</p>
+</div>
+
+<div class="footer">
+  <p>AI Data Analyst Platform — Project Summary Document</p>
+  <p>Generated: May 2026 | Built with FastAPI + LangGraph + Next.js + PostgreSQL</p>
+</div>
+
+</div>
+</body>
+</html>

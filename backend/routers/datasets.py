@@ -12,6 +12,7 @@ from database import get_db
 from models import User, Dataset, DatasetTable, DatasetColumn
 from routers.auth import get_current_user
 from services.profiler import generate_profile, generate_suggested_questions
+from services.utils import encrypt_password
 from schemas.datasets import (
     DatasetDetailResponse,
     DatasetSummaryResponse,
@@ -339,13 +340,14 @@ def connect_database(
     if not table_names:
         raise HTTPException(422, "Connected but no tables found in the database")
 
-    # Store connection info — password excluded
+    # Store connection info — password encrypted safely using AES Fernet
     safe_conn = {
         "db_type":  body.db_type,
         "host":     body.host,
         "port":     body.port,
         "username": body.username,
         "database": body.database,
+        "password": encrypt_password(body.password),
     }
 
     dataset = Dataset(

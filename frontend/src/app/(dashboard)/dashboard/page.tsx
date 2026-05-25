@@ -10,7 +10,8 @@ import {
   UploadCloud, Database, Sparkles, Send, MessageSquare,
   Loader2, CheckCircle2, ScanSearch, Cpu, BrainCircuit,
   BarChart3, PieChart as PieChartIcon, TrendingUp, Lightbulb,
-  ArrowRight, FileSpreadsheet, X, User, Trash2, Maximize2, Minimize2
+  ArrowRight, FileSpreadsheet, X, User, Trash2, Maximize2, Minimize2,
+  Globe, Zap, Target, Activity
 } from "lucide-react"
 import { useAuthStore } from "@/lib/store"
 import { api } from "@/lib/api"
@@ -508,32 +509,35 @@ export default function DashboardPage() {
 
       {/* ═══ DASHBOARD STATS ═══ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-brand/30 transition-all duration-300">
+        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-brand/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,168,83,0.08)]">
           <div className="flex justify-between items-start mb-4">
             <p className="text-foreground/60 font-medium text-sm">Total Datasets</p>
-            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-brand/10 transition-colors">
+            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-brand/10 group-hover:border-brand/20 transition-colors">
               <Database className="w-5 h-5 text-brand-light" />
             </div>
           </div>
           <h3 className="text-4xl font-bold tracking-tight">{summary?.total_datasets ?? datasets.length}</h3>
+          <p className="text-xs text-foreground/30 mt-1">Active intelligence sources</p>
         </div>
-        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-brand/30 transition-all duration-300">
+        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-cyan-500/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.08)]">
           <div className="flex justify-between items-start mb-4">
             <p className="text-foreground/60 font-medium text-sm">Chat Sessions</p>
-            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-brand/10 transition-colors">
+            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-cyan-500/10 group-hover:border-cyan-500/20 transition-colors">
               <MessageSquare className="w-5 h-5 text-cyan-400" />
             </div>
           </div>
           <h3 className="text-4xl font-bold tracking-tight">{summary?.total_sessions ?? 0}</h3>
+          <p className="text-xs text-foreground/30 mt-1">Analysis conversations</p>
         </div>
-        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-brand/30 transition-all duration-300">
+        <div className="group p-6 rounded-2xl border border-surface-border bg-surface/[0.02] hover:border-emerald-500/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(16,185,129,0.08)]">
           <div className="flex justify-between items-start mb-4">
             <p className="text-foreground/60 font-medium text-sm">AI Queries</p>
-            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-brand/10 transition-colors">
+            <div className="w-11 h-11 rounded-xl bg-surface flex items-center justify-center border border-surface-border group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-colors">
               <BarChart3 className="w-5 h-5 text-emerald-400" />
             </div>
           </div>
           <h3 className="text-4xl font-bold tracking-tight">{summary?.total_queries ?? 0}</h3>
+          <p className="text-xs text-foreground/30 mt-1">Data intelligence reports</p>
         </div>
       </div>
 
@@ -859,7 +863,7 @@ export default function DashboardPage() {
                           <div className="w-full rounded-xl border border-surface-border bg-[#0a0a10] overflow-hidden text-xs">
                             {/* Data table — all rows, all columns */}
                             {preview.length > 0 && (
-                              <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
+                              <div className="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
                                 <table className="w-full min-w-max">
                                   <thead className="sticky top-0 bg-[#0d0d14] z-10">
                                     <tr className="border-b border-surface-border/50">

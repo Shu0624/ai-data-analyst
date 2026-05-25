@@ -11,11 +11,12 @@ Effective: AY 2020-2021
 --- CRITICAL: FAIL vs PASS GRADE RULES ---
 *** THIS IS THE MOST IMPORTANT SECTION — READ CAREFULLY ***
 
-FAIL grades (ONLY these two):
-  FF = FAIL (absent, detained, ESE below minimum, or must repeat subject)
-  EF = FAIL (total marks below 40, rarely used — dataset mostly uses FF)
+THE SIMPLE RULE: Below 40 total marks = FAIL. 40 and above = PASS.
 
-PASS grades (ALL of these are PASS, do NOT treat them as fail):
+FAIL grades (ONLY these — marks below 40 or special cases):
+  FF = FAIL (absent, detained, ESE below minimum, or total below 40)
+
+PASS grades (ALL of these are PASS — marks 40 and above):
   EE = PASS (40-50 marks, minimum passing grade, grade point 5.0)
   DE = PASS (51-55 marks)
   DD = PASS (56-60 marks)
@@ -28,9 +29,9 @@ PASS grades (ALL of these are PASS, do NOT treat them as fail):
   EX = PASS (91-100 marks, highest grade)
 
 SQL RULES:
-- For "fail students":   WHERE Grade = 'FF' OR Grade = 'EF'
-- For "pass students":   WHERE Grade NOT IN ('FF', 'EF')
-- NEVER include EE in fail — EE is the MINIMUM PASSING grade
+- For "fail students":   WHERE Grade = 'FF'
+- For "pass students":   WHERE Grade != 'FF'
+- NEVER include EE in fail — EE means 40-50 marks which is ABOVE 40 = PASS
 - The Grade column contains ONLY letter codes: EX, AA, AB, BB, BC, CC, CD, DD, DE, EE, FF
 - There is NO literal "Pass" or "Fail" text in the Grade column
 
@@ -39,7 +40,7 @@ A student gets FF even with Total >= 40 if:
   1. ESE (End Semester Exam) marks < minimum (theory: 20/60, practical: varies)
   2. Student was absent (AB) in ESE
   3. Student was detained (attendance < 65%)
-So DO NOT use "Total < 40" to find fail students. Use Grade = 'FF' instead.
+So use Grade = 'FF' for fail students (it covers all fail cases including below 40).
 
 --- SEMESTER / YEAR MAPPING ---
 First Year  (FE / 1st year):   Sem 1, Sem 2

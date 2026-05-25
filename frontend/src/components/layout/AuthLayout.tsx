@@ -6,7 +6,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col bg-[#06060A] relative selection:bg-brand selection:text-background overflow-hidden">
       
       {/* Background Floating Orbs (from reference image) - Luxury Gold Edition */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         {/* Giant Top Right Orb */}
         <div className="absolute -top-[10%] -right-[10%] w-[800px] h-[800px] bg-[radial-gradient(circle_at_30%_30%,rgba(240,201,123,0.15),rgba(212,168,83,0.05)_40%,transparent_70%)] rounded-full mix-blend-screen blur-[2px]" />
         
