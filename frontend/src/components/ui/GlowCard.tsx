@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils"
 interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   glowColor?: string
-  borderColor?: string
   radialRadius?: number
 }
 
@@ -14,7 +13,6 @@ export function GlowCard({
   children,
   className,
   glowColor = "rgba(212, 168, 83, 0.06)", // Soft gold default
-  borderColor = "rgba(212, 168, 83, 0.25)",
   radialRadius = 300,
   ...props
 }: GlowCardProps) {

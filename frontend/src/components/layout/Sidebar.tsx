@@ -8,7 +8,6 @@ import {
   MessageCircle, ChevronLeft, ChevronRight 
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useAuthStore } from "@/lib/store"
 import { logoutUser } from "@/lib/auth"
 
 const navItems = [
