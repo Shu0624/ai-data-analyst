@@ -63,3 +63,12 @@ logs/
 
 # uv tool
 .uv/
+
+# Mini project docs & research files
+*.docx
+*.pdf
+*.pptx
+*.html
+fill_*.py
+check_db.py
+create_client.py
