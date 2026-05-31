@@ -14,6 +14,47 @@ setup_logger("app")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-seed Client for WhatsApp chatbot if database is empty/reset
+    from database import SessionLocal
+    from models import User, Client
+    import bcrypt
+    
+    db = SessionLocal()
+    try:
+        # Ensure dev user exists
+        dev_user = db.query(User).filter(User.email == "dev@localhost.com").first()
+        if not dev_user:
+            dev_pass_hash = bcrypt.hashpw("devpassword123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+            dev_user = User(
+                name="Dev User",
+                email="dev@localhost.com",
+                password_hash=dev_pass_hash,
+                role="user",
+                is_verified=True,
+            )
+            db.add(dev_user)
+            db.flush()
+            
+        # Ensure Dev Gym Studio client exists
+        client = db.query(Client).filter(Client.whatsapp_number == "15556447104").first()
+        if not client:
+            client = Client(
+                user_id=dev_user.id,
+                business_name="Dev Gym Studio",
+                niche="gym",
+                whatsapp_number="15556447104",
+                is_active=True,
+            )
+            db.add(client)
+            
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Error seeding database: {e}")
+    finally:
+        db.close()
+        
     yield
 
 
